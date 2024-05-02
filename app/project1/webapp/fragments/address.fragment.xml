@@ -1,0 +1,25 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:l="sap.ui.layout"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:core="sap.ui.core"
+    
+>
+    <f:SimpleForm  binding="{address}"  >
+        <Label
+            id="A1"
+            text="city "
+        />
+        <Text text="{city}" />
+        <Label
+            id="A2"
+            text="state"
+        />
+        <Text  text="{state}" />
+          <Label
+            id="A3"
+            text="country"
+        />
+        <Text  text="{country}" />
+    </f:SimpleForm>
+</core:FragmentDefinition>

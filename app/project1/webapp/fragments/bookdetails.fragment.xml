@@ -1,0 +1,20 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:l="sap.ui.layout"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:core="sap.ui.core"
+    
+>
+    <f:SimpleForm   >
+        <Label
+            id="l1"
+            text="Books Sold"
+        />
+        <Text text="{books_sold}" />
+        <Label
+            id="l2"
+            text="author name"
+        />
+        <Text  text="{Author_d/author_name}" />
+    </f:SimpleForm>
+</core:FragmentDefinition>

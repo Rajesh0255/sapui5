@@ -1,0 +1,113 @@
+<mvc:View controllerName="com.app.project1.controller.Newpage"
+    xmlns:html="http://www.w3.org/1999/xhtml"
+    xmlns:mvc="sap.ui.core.mvc" displayBlock="true"
+    xmlns="sap.m"
+ xmlns:core="sap.ui.core"
+    xmlns:form="sap.ui.layout.form"
+    xmlns:layout="sap.ui.layout"
+    xmlns:uxap="sap.uxap">
+     <uxap:ObjectPageLayout id="_IDGenObjectPageLayout1">
+        <uxap:headerTitle>
+            <uxap:ObjectPageDynamicHeaderTitle
+                id="_IDGenObjectPageDynamicHeaderTitle1"
+            >
+                <uxap:expandedHeading>
+                    <Title
+                        id="_IDGenTitle1"
+                        text="{author}"
+                    />
+                </uxap:expandedHeading>
+                <uxap:actions>
+                    <Button
+                        text="Edit"
+                        type="Emphasized"
+                        press="onEdit"
+                    />
+                    <Button
+                        type="Transparent"
+                        text="Delete"
+                    />
+                    <Button
+                        type="Transparent"
+                        text="Copy"
+                    />
+                    <OverflowToolbarButton
+                        icon="sap-icon://action"
+                        type="Transparent"
+                        text="Share"
+                        tooltip="action"
+                    />
+                </uxap:actions>
+            </uxap:ObjectPageDynamicHeaderTitle>
+        </uxap:headerTitle>
+        <uxap:headerContent>
+            <FlexBox
+                wrap="Wrap"
+                fitContainer="true"
+            >
+                <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+                    <Link text="{phone}" />
+                </layout:VerticalLayout>
+            </FlexBox>
+        </uxap:headerContent>
+        <uxap:sections>
+            <uxap:ObjectPageSection
+                titleUppercase="false"
+                id="ops"
+                title="Book Details"
+            >
+                <uxap:subSections>
+                    <uxap:ObjectPageSubSection>
+                        <uxap:blocks>
+                            <core:Fragment type="XML" fragmentName ="com.app.project1.fragments.bookdetails" />
+                        </uxap:blocks>
+                    </uxap:ObjectPageSubSection>
+                </uxap:subSections>
+            </uxap:ObjectPageSection>
+
+            <uxap:ObjectPageSection
+                titleUppercase="false"
+                id="ops1"
+                title="Author Address Details"
+            >
+                <uxap:subSections>
+                    <uxap:ObjectPageSubSection>
+                        <uxap:blocks>
+                           <core:Fragment type="XML" fragmentName ="com.app.project1.fragments.address" />
+                        </uxap:blocks>
+                    </uxap:ObjectPageSubSection>
+                </uxap:subSections>
+            </uxap:ObjectPageSection>
+
+            <uxap:ObjectPageSection
+                titleUppercase="false"
+                id="ops2"
+                title="Details"
+            >
+                <uxap:subSections>
+                    <uxap:ObjectPageSubSection>
+                        <uxap:blocks>
+                            <Text text="Naveen" />
+                        </uxap:blocks>
+                    </uxap:ObjectPageSubSection>
+                </uxap:subSections>
+            </uxap:ObjectPageSection>
+
+            <uxap:ObjectPageSection
+                titleUppercase="false"
+                id="ops3"
+                title="Contact Details"
+            >
+                <uxap:subSections>
+                    <uxap:ObjectPageSubSection>
+                        <uxap:blocks>
+                            <Text text="Naveen" />
+                        </uxap:blocks>
+                    </uxap:ObjectPageSubSection>
+                </uxap:subSections>
+            </uxap:ObjectPageSection>
+        </uxap:sections>
+    </uxap:ObjectPageLayout>
+
+
+</mvc:View>
