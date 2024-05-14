@@ -3,95 +3,129 @@ ID: bookdetails
 description: A simple CAP project.
 version: 1.0.0
 modules:
-  - name: bookdetails-srv
-    type: nodejs
-    path: gen/srv
-    requires:
-      - name: bookdetails-db
-      - name: uaa_bookdetails
-    provides:
-      - name: srv-api
-        properties:
-          srv-url: ${default-url}
+- name: bookdetails-srv
+  type: nodejs
+  path: gen/srv
+  requires:
+  - name: bookdetails-db
+  - name: uaa_bookdetails
+  provides:
+  - name: srv-api
+    properties:
+      srv-url: ${default-url}
+  parameters:
+    buildpack: nodejs_buildpack
+    readiness-health-check-http-endpoint: /health
+    readiness-health-check-type: http
+  build-parameters:
+    builder: npm
+- name: bookdetails-db-deployer
+  type: hdb
+  path: gen/db
+  requires:
+  - name: bookdetails-db
+  parameters:
+    buildpack: nodejs_buildpack
+- name: bookdetails-destination-content
+  type: com.sap.application.content
+  requires:
+  - name: bookdetails-destination-service
     parameters:
-      buildpack: nodejs_buildpack
-      readiness-health-check-http-endpoint: /health
-      readiness-health-check-type: http
-    build-parameters:
-      builder: npm
-  - name: bookdetails-db-deployer
-    type: hdb
-    path: gen/db
-    requires:
-      - name: bookdetails-db
+      content-target: true
+  - name: bookdetails_html_repo_host
     parameters:
-      buildpack: nodejs_buildpack
-  - name: bookdetails-destination-content
-    type: com.sap.application.content
-    requires:
-      - name: bookdetails-destination-service
-        parameters:
-          content-target: true
-      - name: bookdetails_html_repo_host
-        parameters:
-          service-key:
-            name: bookdetails_html_repo_host-key
-      - name: uaa_bookdetails
-        parameters:
-          service-key:
-            name: uaa_bookdetails-key
+      service-key:
+        name: bookdetails_html_repo_host-key
+  - name: uaa_bookdetails
     parameters:
-      content:
+      service-key:
+        name: uaa_bookdetails-key
+  parameters:
+    content:
+      instance:
+        destinations:
+        - Name: managed_bookdetails_html_repo_host
+          ServiceInstanceName: bookdetails-html5-app-host-service
+          ServiceKeyName: bookdetails_html_repo_host-key
+          sap.cloud.service: managed
+        - Authentication: OAuth2UserTokenExchange
+          Name: managed_uaa_bookdetails
+          ServiceInstanceName: bookdetails-xsuaa-service
+          ServiceKeyName: uaa_bookdetails-key
+          sap.cloud.service: managed
+        existing_destinations_policy: ignore
+  build-parameters:
+    no-source: true
+- name: bookdetails-app-content
+  type: com.sap.application.content
+  path: .
+  requires:
+  - name: bookdetails_html_repo_host
+    parameters:
+      content-target: true
+  build-parameters:
+    build-result: resources
+    requires:
+    - artifacts:
+      - project2.zip
+      name: project2
+      target-path: resources/
+- name: project2
+  type: html5
+  path: app/project2
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
+resources:
+- name: bookdetails-db
+  type: com.sap.xs.hdi-container
+  parameters:
+    service: hana
+    service-plan: hdi-shared
+- name: bookdetails-destination-service
+  type: org.cloudfoundry.managed-service
+  parameters:
+    config:
+      HTML5Runtime_enabled: true
+      init_data:
         instance:
           destinations:
-            - Name: managed_bookdetails_html_repo_host
-              ServiceInstanceName: bookdetails-html5-app-host-service
-              ServiceKeyName: bookdetails_html_repo_host-key
-              sap.cloud.service: managed
-            - Authentication: OAuth2UserTokenExchange
-              Name: managed_uaa_bookdetails
-              ServiceInstanceName: bookdetails-xsuaa-service
-              ServiceKeyName: uaa_bookdetails-key
-              sap.cloud.service: managed
-          existing_destinations_policy: ignore
-    build-parameters:
-      no-source: true
-resources:
-  - name: bookdetails-db
-    type: com.sap.xs.hdi-container
-    parameters:
-      service: hana
-      service-plan: hdi-shared
-  - name: bookdetails-destination-service
-    type: org.cloudfoundry.managed-service
-    parameters:
-      config:
-        HTML5Runtime_enabled: true
-        version: 1.0.0
-      service: destination
-      service-name: bookdetails-destination-service
-      service-plan: lite
-  - name: bookdetails_html_repo_host
-    type: org.cloudfoundry.managed-service
-    parameters:
-      service: html5-apps-repo
-      service-name: bookdetails-html5-app-host-service
-      service-plan: app-host
-  - name: uaa_bookdetails
-    type: org.cloudfoundry.managed-service
-    parameters:
-      path: ./xs-security.json
-      service: xsuaa
-      service-name: bookdetails-xsuaa-service
-      service-plan: application
-      config:
-        xsappname: bookdetails-${org}-${space}
-        tenant-mode: dedicated
+          - Authentication: NoAuthentication
+            Name: ui5
+            ProxyType: Internet
+            Type: HTTP
+            URL: https://ui5.sap.com
+          existing_destinations_policy: update
+      version: 1.0.0
+    service: destination
+    service-name: bookdetails-destination-service
+    service-plan: lite
+- name: bookdetails_html_repo_host
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: html5-apps-repo
+    service-name: bookdetails-html5-app-host-service
+    service-plan: app-host
+- name: uaa_bookdetails
+  type: org.cloudfoundry.managed-service
+  parameters:
+    config:
+      tenant-mode: dedicated
+      xsappname: bookdetails-${org}-${space}
+    path: ./xs-security.json
+    service: xsuaa
+    service-name: bookdetails-xsuaa-service
+    service-plan: application
 parameters:
+  deploy_mode: html5-repo
   enable-parallel-deployments: true
 build-parameters:
   before-all:
-    - builder: custom
-      commands:
-        - npm i
-        - npx cds build --production
+  - builder: custom
+    commands:
+    - npm i
+    - npx cds build --production

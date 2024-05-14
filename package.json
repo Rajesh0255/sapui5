@@ -1,60 +1,68 @@
 {
-  "name": "bookdetails",
-  "version": "1.0.0",
-  "description": "A simple CAP project.",
-  "repository": "<Add your repository here>",
-  "license": "UNLICENSED",
-  "private": true,
-  "dependencies": {
-    "@sap/cds": "^7",
-    "@sap/xssec": "^3",
-    "express": "^4",
-    "@sap/cds-hana": "^2"
-  },
-  "devDependencies": {
-    "@cap-js/sqlite": "^1",
-    "@sap/cds-dk": "^7",
-    "@sap/ux-specification": "^1.120.9"
-  },
-  "scripts": {
-    "start": "cds-serve",
-    "watch-project1": "cds watch --open project1/webapp/index.html?sap-ui-xx-viewCache=false"
-  },
-  "cds": {
-    "requires": {
-      "db": {
-        "[devlopment]": {
-          "kind": "sqlite"
-        },
-        "[production]": {
-          "kind": "hana"
-        }
-      },
-      "[production]": {
-        "auth": "xsuaa"
-      },
-      "[development]": {
-        "auth": {
-          "kind": "mocked",
-          "users": {
-            "admin@sap.com": {
-              "password": "Initial",
-              "ID": "admin@sap.com",
-              "roles": [
-                "Admin"
-              ]
+    "name": "bookdetails",
+    "version": "1.0.0",
+    "description": "A simple CAP project.",
+    "repository": "<Add your repository here>",
+    "license": "UNLICENSED",
+    "private": true,
+    "dependencies": {
+        "@sap/cds": "^7",
+        "@sap/cds-hana": "^2",
+        "@sap/xssec": "^3",
+        "express": "^4"
+    },
+    "devDependencies": {
+        "@cap-js/sqlite": "^1",
+        "@sap/cds-dk": "^7",
+        "@sap/ux-specification": "^1.120.10",
+        "rimraf": "^3.0.2"
+    },
+    "scripts": {
+        "start": "cds-serve",
+        "watch-project1": "cds watch --open project1/webapp/index.html?sap-ui-xx-viewCache=false",
+        "watch-project2": "cds watch --open project2/webapp/index.html?sap-ui-xx-viewCache=false",
+        "undeploy": "cf undeploy bookdetails --delete-services --delete-service-keys --delete-service-brokers",
+        "build": "rimraf resources mta_archives && mbt build --mtar archive",
+        "deploy": "cf deploy mta_archives/archive.mtar --retries 1"
+    },
+    "cds": {
+        "requires": {
+            "db": {
+                "[devlopment]": {
+                    "kind": "sqlite"
+                },
+                "[production]": {
+                    "kind": "hana"
+                }
             },
-            "user@sap.com": {
-              "password": "Initial",
-              "ID": "user@sap.com",
-              "roles": [
-                "User"
-              ]
-            }
-          }
+            "[production]": {
+                "auth": "xsuaa"
+            },
+            "[development]": {
+                "auth": {
+                    "kind": "mocked",
+                    "users": {
+                        "admin@sap.com": {
+                            "password": "Initial",
+                            "ID": "admin@sap.com",
+                            "roles": [
+                                "Admin"
+                            ]
+                        },
+                        "user@sap.com": {
+                            "password": "Initial",
+                            "ID": "user@sap.com",
+                            "roles": [
+                                "User"
+                            ]
+                        }
+                    }
+                }
+            },
+            "auth": "xsuaa"
         }
-      },
-      "auth": "xsuaa"
-    }
-  }
+    },
+    "sapux": [
+        "app/project2"
+    ]
 }
