@@ -70,9 +70,23 @@ modules:
       - project2.zip
       name: project2
       target-path: resources/
+    - artifacts:
+      - worksheet.zip
+      name: worksheet
+      target-path: resources/
 - name: project2
   type: html5
   path: app/project2
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
+- name: worksheet
+  type: html5
+  path: app/worksheet
   build-parameters:
     build-result: dist
     builder: custom
@@ -99,11 +113,20 @@ resources:
             ProxyType: Internet
             Type: HTTP
             URL: https://ui5.sap.com
+          - Authentication: NoAuthentication
+            HTML5.DynamicDestination: true
+            HTML5.ForwardAuthToken: true
+            Name: bookdetails-srv-api
+            ProxyType: Internet
+            Type: HTTP
+            URL: ~{srv-api/srv-url}
           existing_destinations_policy: update
       version: 1.0.0
     service: destination
     service-name: bookdetails-destination-service
     service-plan: lite
+  requires:
+  - name: srv-api
 - name: bookdetails_html_repo_host
   type: org.cloudfoundry.managed-service
   parameters:

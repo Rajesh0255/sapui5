@@ -23,7 +23,8 @@
         "watch-project2": "cds watch --open project2/webapp/index.html?sap-ui-xx-viewCache=false",
         "undeploy": "cf undeploy bookdetails --delete-services --delete-service-keys --delete-service-brokers",
         "build": "rimraf resources mta_archives && mbt build --mtar archive",
-        "deploy": "cf deploy mta_archives/archive.mtar --retries 1"
+        "deploy": "cf deploy mta_archives/archive.mtar --retries 1",
+        "watch-worksheet": "cds watch --open worksheet/webapp/index.html?sap-ui-xx-viewCache=false"
     },
     "cds": {
         "requires": {
@@ -63,6 +64,7 @@
         }
     },
     "sapux": [
-        "app/project2"
+        "app/project2",
+        "app/worksheet"
     ]
 }
