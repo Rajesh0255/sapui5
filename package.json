@@ -7,14 +7,54 @@
   "private": true,
   "dependencies": {
     "@sap/cds": "^7",
-    "express": "^4"
+    "@sap/xssec": "^3",
+    "express": "^4",
+    "@sap/cds-hana": "^2"
   },
   "devDependencies": {
     "@cap-js/sqlite": "^1",
+    "@sap/cds-dk": "^7",
     "@sap/ux-specification": "^1.120.9"
   },
   "scripts": {
     "start": "cds-serve",
     "watch-project1": "cds watch --open project1/webapp/index.html?sap-ui-xx-viewCache=false"
+  },
+  "cds": {
+    "requires": {
+      "db": {
+        "[devlopment]": {
+          "kind": "sqlite"
+        },
+        "[production]": {
+          "kind": "hana"
+        }
+      },
+      "[production]": {
+        "auth": "xsuaa"
+      },
+      "[development]": {
+        "auth": {
+          "kind": "mocked",
+          "users": {
+            "admin@sap.com": {
+              "password": "Initial",
+              "ID": "admin@sap.com",
+              "roles": [
+                "Admin"
+              ]
+            },
+            "user@sap.com": {
+              "password": "Initial",
+              "ID": "user@sap.com",
+              "roles": [
+                "User"
+              ]
+            }
+          }
+        }
+      },
+      "auth": "xsuaa"
+    }
   }
 }

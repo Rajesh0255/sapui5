@@ -1,14 +1,14 @@
 sap.ui.define([
-    "sap/ui/core/mvc/Controller",
+    "./BaseController",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/m/Token",
-    "sap/ui/core/Fragment"
+    "sap/m/MessageBox"
 ],
     /**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
      */
-    function (Controller, Filter, FilterOperator, Token, Fragment) {
+    function (Controller, Filter, FilterOperator, Token) {
         "use strict";
 
         return Controller.extend("com.app.project1.controller.home", {
@@ -82,23 +82,17 @@ sap.ui.define([
             },
             onAdd: async function () {
                 if (!this.oDialogboxforbook) {
-                    this.oDialogboxforbook = await Fragment.load({
-                        id: this.getView().getId(),
-                        name: "com.app.project1.fragments.dialogbox",
-                        Controller: this
-                    });
-                    this.getView().addDependent(this.oDialogboxforbook);
-
+                    this.oDialogboxforbook = await this.loadFragment("Dialogboxforbook")
                 }
-                this.oDialogboxforbook.open()
-                debugger
+                this.oDialogboxforbook.open();
             },
+
             onCloseDialog: function () {
                 if (this.oDialogboxforbook.isOpen()) {
                     this.oDialogboxforbook.close()
                 }
+             
             },
-
             onSelectBook: function (oEvent) {
                 debugger
                 const { ID, author } = oEvent.getSource().getSelectedItem().getBindingContext().getObject();

@@ -21,7 +21,7 @@ entity Author_details {
 entity Address {
   key ID      : UUID;
       city    : String;
-      distric : Date;
+      distric : String;
       state   : String;
       country : String;
       pincode : Integer;
